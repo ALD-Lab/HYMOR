@@ -350,7 +350,7 @@ Finds the optimal freestream disturbance pattern that produces the maximum energ
 
 ```matlab
 time_optimization_index = 1;
-mode = 3;
+mode = 1;
 T_plot = 10;
 freestream_disturbances = true;
 solution.running_plot.scaling_range = 1/10;
@@ -358,7 +358,7 @@ PLOT_MODES(freestream_disturbances, L_, solution, chemistry, ...
     V_TGF(:,mode,time_optimization_index), T_plot, w_infty);
 ```
 
-Plots both the freestream disturbance and the resulting shock-layer perturbation. We select `mode = 3`, because the other first two modes are spurious (they are caused by numerical discretization error, and do not converge with mesh refinement).
+Plots both the freestream disturbance and the resulting shock-layer perturbation.
 
 | Parameter | Description |
 |-----------|-------------|
@@ -371,10 +371,6 @@ Setting freestream_disturbances = true activates the freestream component of the
 <td align="center"><img src="figures/mode_freestream_velocity_T10.0000-1.png" width="400"><br><b>Figure 5.a)</b> Velocity magnitude of optimal freestream receptivity mode at <code>T_plot = 10</code>.</td>
 <td align="center"><img src="figures/mode_freestream_entropy_T10.0000-1.png" width="400"><br><b>Figure 5.b)</b> Entropy of optimal freestream receptivity mode at <code>T_plot = 10</code>.</td>
 </tr>
-<tr>
-<td align="center"><img src="figures/mode_freestream_vorticity_zoom_T10.0000-1.png" width="400"><br><b>Figure 5.c)</b> Vorticity (zoomed) of optimal freestream receptivity mode at <code>T_plot = 10</code>.</td>
-<td></td>
-</tr>
 </table>
 
 ---
@@ -383,7 +379,7 @@ Setting freestream_disturbances = true activates the freestream component of the
 
 ```matlab
 T_f = 10;
-mode = 3;
+mode = 1;
 freestream_disturbances = true;
 get_amplification_only = true;
 max_gain = LINEAR_INTEGRATION_AND_GAINS(...
@@ -397,7 +393,7 @@ disp("max_ref(E_S) = " + max_gain.non_temporal.entropic)
 disp("max_ref(E_k) = " + max_gain.non_temporal.kinetic)
 ```
 
-Computes and prints the Chu-norm energy decomposition for the freestream receptivity mode, showing how upstream disturbances partition their energy into acoustic, entropic, and kinetic components inside the shock layer. It can be seen that the most amplified mode has gains around 20000 relative to freestream disturbance energy. This significant gain is caused mainly by the Mach squared scaling of disturbance energy when they cross a strong shock (McKenzie & Westphal 1968). In this case due to the high Mach number, this gives rise to large energy growths.
+Computes and prints the Chu-norm energy decomposition for the freestream receptivity mode, showing how upstream disturbances partition their energy into acoustic, entropic, and kinetic components inside the shock layer. It can be seen that the most amplified mode has gains around 2000 relative to freestream disturbance energy. This significant gain is caused mainly by the Mach squared scaling of disturbance energy when they cross a strong shock (McKenzie & Westphal 1968). In this case due to the high Mach number, this gives rise to large energy growths.
 
 <table>
 <tr>

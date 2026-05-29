@@ -260,12 +260,12 @@ function PLOT_MODES(freestream_disturbances, A, s, chemistry, V, T_plot, w_infty
 
     %% Define perturbation plot list
     pert_plots = {
-        {pert_p / scale_p,           '$\displaystyle \frac{P^\prime(T)}{max(|P^\prime(0)|)}$',       'mode_pressure'}
-        {pert_rho / scale_rho,       '$\displaystyle \frac{\rho^\prime(T)}{max(|\rho^\prime(0)|)}$', 'mode_density'}
-        {pert_u_mag / scale_u,       '$\displaystyle \frac{\|\vec{u}\|_2^\prime(T)}{max(| \|\vec{u}\|_2^\prime(0)|)}$', 'mode_velocity'}
-        {pert_vort / scale_vort,     '$\displaystyle \frac{\omega_z^\prime(T)}{max(|\omega_z^\prime(0)|)}$', 'mode_vorticity'}
-        %{pert_div / scale_div,       '$\displaystyle \frac{\nabla \cdot \vec{u}^\prime(T)}{max(|\nabla \cdot \vec{u}^\prime(0)|)}$',       'mode_divergence'}
-        {pert_entropy / scale_s,     '$\displaystyle \frac{s^\prime(T)}{max(|s^\prime(0)|)}$',       'mode_entropy'}
+        {pert_p / scale_p,           '$\displaystyle \frac{P^\prime(t)}{max(|P^\prime(0)|)}$',       'mode_pressure'}
+        {pert_rho / scale_rho,       '$\displaystyle \frac{\rho^\prime(t)}{max(|\rho^\prime(0)|)}$', 'mode_density'}
+        {pert_u_mag / scale_u,       '$\displaystyle \frac{\|\vec{u}\|_2^\prime(t)}{max(| \|\vec{u}\|_2^\prime(0)|)}$', 'mode_velocity'}
+        {pert_vort / scale_vort,     '$\displaystyle \frac{\omega_z^\prime(t)}{max(|\omega_z^\prime(0)|)}$', 'mode_vorticity'}
+        %{pert_div / scale_div,       '$\displaystyle \frac{\nabla \cdot \vec{u}^\prime(t)}{max(|\nabla \cdot \vec{u}^\prime(0)|)}$',       'mode_divergence'}
+        {pert_entropy / scale_s,     '$\displaystyle \frac{s^\prime(t)}{max(|s^\prime(0)|)}$',       'mode_entropy'}
     };
 
     %% Build coordinate arrays and create all plots

@@ -48,6 +48,10 @@ solver_dir = '../../'; % Update this path to the absolute path of the solver roo
 solution = struct();
 solution.solver_dir = solver_dir;
 
+%% Output settings
+solution.save_workspace = true;          % Set to false to skip saving the full MATLAB workspace
+solution.workdir        = './workdir/';  % Directory where the full workspace is stored
+
 %% Include utilities
 addpath(solver_dir + "utils/Initialization/")
 addpath(solver_dir + "utils/Mesh/")
@@ -215,7 +219,15 @@ end
 
 %% Visualize freestream receptivity modes
 time_optimization_index = 1;
-mode = 2; % Mode to visualize
+mode = 1; % Mode to visualize
 T_plot = 5; % Time in which disturbance is plotted
 freestream_disturbances = true;
 PLOT_MODES(freestream_disturbances,L_,solution,chemistry,V_TGF(:,mode,time_optimization_index),T_plot,w_infty); % Plot modes
+
+%% Save workspace
+if solution.save_workspace
+    if ~exist(solution.workdir, 'dir')
+        mkdir(solution.workdir)
+    end
+    save(fullfile(solution.workdir, 'myWorkspace.mat'))
+end

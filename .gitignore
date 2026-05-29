@@ -5,6 +5,11 @@ cases_mine/
 *.asv
 *myWorkspace.mat
 
+# Saved workspaces / work directories for the MATLAB tutorials
+*/channel_flow/workdir/
+*/hypersonic_blunt_cone/workdir/
+*/hypersonic_cylinder/workdir/
+
 # Figures
 *_out.png
 */hypersonic_entry_capsule/*.pdf

@@ -200,7 +200,7 @@ end
 ## Visualize freestream receptivity modes
 SET_PLOT_DEFAULTS(output_dir=joinpath(@__DIR__, "output", "freestream_receptivity"))
 time_optimization_index = 1
-mode = 3 # Mode to visualize
+mode = 1 # Mode to visualize
 T_plot = 10 # Time in which disturbance is plotted
 freestream_disturbances = true
 solution["running_plot"]["scaling_range"] = 1/10 # Saturate to see field
@@ -208,7 +208,7 @@ PLOT_MODES(freestream_disturbances, L_, solution, chemistry, V_TGF[:, mode, time
 
 ## Visualize selected freestream gains
 T_f = 10 # Final time of integration to see energy growth
-mode = 3 # Mode to evolve in time
+mode = 1 # Mode to evolve in time
 freestream_disturbances = true
 get_amplification_only = true
 max_gain = LINEAR_INTEGRATION_AND_GAINS(freestream_disturbances, V_TGF[:, mode, time_optimization_index], D_TGF[mode, mode, time_optimization_index], T_opt_TGF[time_optimization_index, 1], L_, solution, chemistry, T_f, get_amplification_only, w_infty)
