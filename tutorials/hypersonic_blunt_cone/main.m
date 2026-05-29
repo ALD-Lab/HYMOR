@@ -243,7 +243,7 @@ time_optimization_index = 1;
 mode = 1; % Mode to visualize (first two spurious)
 T_plot = 10; % Time in which disturbance is plotted
 freestream_disturbances = true;
-solution.running_plot.scaling_range = 1/10; % Saturate to see field
+solution.running_plot.scaling_range = 1/2; % Saturate to see field
 PLOT_MODES(freestream_disturbances,L_,solution,chemistry,V_TGF(:,mode,time_optimization_index),T_plot,w_infty); % Plot modes
 
 %% Visualize selected freestrean gains
