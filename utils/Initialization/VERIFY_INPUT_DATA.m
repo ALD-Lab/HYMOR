@@ -219,12 +219,39 @@ function s = VERIFY_INPUT_DATA(s)
     assert(isfield(s.time_integration, 'time_integrator'), 'Missing field: time_integration.time_integrator');
     assert(ismember(s.time_integration.time_integrator, ["Explicit_RK4", "Implicit_Euler"]), 'Invalid time_integrator');
     if s.time_integration.time_integrator == "Implicit_Euler"
-        assert(isfield(s.time_integration, 'tolerance'), 'Missing field: time_integration.tolerance for Implicit_Euler');
-        assert(isnumeric(s.time_integration.tolerance) && s.time_integration.tolerance > 0, 'time_integration.tolerance must be positive numeric');
-        assert(isfield(s.time_integration, 'max_iter_implicit'), 'Missing field: time_integration.max_iter_implicit for Implicit_Euler');
-        assert(isnumeric(s.time_integration.max_iter_implicit) && s.time_integration.max_iter_implicit > 0 && mod(s.time_integration.max_iter_implicit, 1) == 0, 'time_integration.max_iter_implicit must be a positive integer');
-        assert(isfield(s.time_integration, 'relax_factor'), 'Missing field: time_integration.relax_factor for Implicit_Euler');
-        assert(isnumeric(s.time_integration.relax_factor) && s.time_integration.relax_factor > 0 && s.time_integration.relax_factor <= 1, 'time_integration.relax_factor must be between 0 and 1');
+        % Implicit sub-solver selection (default: Newton / pseudo-transient continuation)
+        if ~isfield(s.time_integration, 'implicit_solver')
+            s.time_integration.implicit_solver = "Newton";
+        end
+        assert(ismember(string(s.time_integration.implicit_solver), ["Newton", "Relaxation"]), ...
+            'time_integration.implicit_solver must be "Newton" or "Relaxation"');
+
+        if string(s.time_integration.implicit_solver) == "Relaxation"
+            % Legacy relaxed fixed-point (Picard) solver
+            assert(isfield(s.time_integration, 'tolerance'), 'Missing field: time_integration.tolerance for Implicit_Euler (Relaxation)');
+            assert(isnumeric(s.time_integration.tolerance) && s.time_integration.tolerance > 0, 'time_integration.tolerance must be positive numeric');
+            assert(isfield(s.time_integration, 'max_iter_implicit'), 'Missing field: time_integration.max_iter_implicit for Implicit_Euler (Relaxation)');
+            assert(isnumeric(s.time_integration.max_iter_implicit) && s.time_integration.max_iter_implicit > 0 && mod(s.time_integration.max_iter_implicit, 1) == 0, 'time_integration.max_iter_implicit must be a positive integer');
+            assert(isfield(s.time_integration, 'relax_factor'), 'Missing field: time_integration.relax_factor for Implicit_Euler (Relaxation)');
+            assert(isnumeric(s.time_integration.relax_factor) && s.time_integration.relax_factor > 0 && s.time_integration.relax_factor <= 1, 'time_integration.relax_factor must be between 0 and 1');
+        else
+            % Newton / pseudo-transient continuation: validate optional ramp parameters if present
+            if isfield(s.time_integration, 'CFL_max')
+                assert(isnumeric(s.time_integration.CFL_max) && s.time_integration.CFL_max > 0, 'time_integration.CFL_max must be positive numeric');
+            end
+            if isfield(s.time_integration, 'CFL_ramp_exponent')
+                assert(isnumeric(s.time_integration.CFL_ramp_exponent) && s.time_integration.CFL_ramp_exponent >= 0, 'time_integration.CFL_ramp_exponent must be non-negative numeric');
+            end
+            if isfield(s.time_integration, 'CFL_growth')
+                assert(isnumeric(s.time_integration.CFL_growth) && s.time_integration.CFL_growth >= 1, 'time_integration.CFL_growth must be >= 1');
+            end
+            if isfield(s.time_integration, 'jacobian_refresh')
+                assert(isnumeric(s.time_integration.jacobian_refresh) && s.time_integration.jacobian_refresh >= 1 && mod(s.time_integration.jacobian_refresh, 1) == 0, 'time_integration.jacobian_refresh must be a positive integer');
+            end
+            if isfield(s.time_integration, 'newton_min_rho_fraction')
+                assert(isnumeric(s.time_integration.newton_min_rho_fraction) && s.time_integration.newton_min_rho_fraction >= 0 && s.time_integration.newton_min_rho_fraction < 1, 'time_integration.newton_min_rho_fraction must be in [0,1)');
+            end
+        end
     end
     assert(isfield(s.time_integration, 'CFL'), 'Missing field: time_integration.CFL');
     assert(isnumeric(s.time_integration.CFL) && s.time_integration.CFL > 0, 'time_integration.CFL must be positive numeric');
@@ -234,7 +261,7 @@ function s = VERIFY_INPUT_DATA(s)
     assert(isnumeric(s.time_integration.max_dt) && s.time_integration.max_dt > 0, 'time_integration.max_dt must be positive numeric');
     if ~isfield(s.time_integration, 'plot_residual')
         s.time_integration.plot_residual = false;
-    else
+    end
 
     % 9. Numerical Dissipation
     if ~isfield(s, 'numerical_dissipation')

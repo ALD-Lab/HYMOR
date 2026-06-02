@@ -235,12 +235,30 @@ function VERIFY_INPUT_DATA(s::Dict{String,Any})
     @assert haskey(s["time_integration"], "time_integrator") "Missing field: time_integration.time_integrator"
     @assert s["time_integration"]["time_integrator"] in ["Explicit_RK4", "Implicit_Euler"] "Invalid time_integrator"
     if s["time_integration"]["time_integrator"] == "Implicit_Euler"
-        @assert haskey(s["time_integration"], "tolerance") "Missing field: time_integration.tolerance for Implicit_Euler"
-        @assert isa(s["time_integration"]["tolerance"], Number) && s["time_integration"]["tolerance"] > 0 "time_integration.tolerance must be positive numeric"
-        @assert haskey(s["time_integration"], "max_iter_implicit") "Missing field: time_integration.max_iter_implicit for Implicit_Euler"
-        @assert isa(s["time_integration"]["max_iter_implicit"], Number) && s["time_integration"]["max_iter_implicit"] > 0 && mod(s["time_integration"]["max_iter_implicit"], 1) == 0 "time_integration.max_iter_implicit must be a positive integer"
-        @assert haskey(s["time_integration"], "relax_factor") "Missing field: time_integration.relax_factor for Implicit_Euler"
-        @assert isa(s["time_integration"]["relax_factor"], Number) && s["time_integration"]["relax_factor"] > 0 && s["time_integration"]["relax_factor"] <= 1 "time_integration.relax_factor must be between 0 and 1"
+        # Implicit sub-solver selection (default: Newton / pseudo-transient continuation)
+        if !haskey(s["time_integration"], "implicit_solver")
+            s["time_integration"]["implicit_solver"] = "Newton"
+        end
+        @assert s["time_integration"]["implicit_solver"] in ["Newton", "Relaxation"] "time_integration.implicit_solver must be \"Newton\" or \"Relaxation\""
+
+        if s["time_integration"]["implicit_solver"] == "Relaxation"
+            @assert haskey(s["time_integration"], "tolerance") "Missing field: time_integration.tolerance for Implicit_Euler (Relaxation)"
+            @assert isa(s["time_integration"]["tolerance"], Number) && s["time_integration"]["tolerance"] > 0 "time_integration.tolerance must be positive numeric"
+            @assert haskey(s["time_integration"], "max_iter_implicit") "Missing field: time_integration.max_iter_implicit for Implicit_Euler (Relaxation)"
+            @assert isa(s["time_integration"]["max_iter_implicit"], Number) && s["time_integration"]["max_iter_implicit"] > 0 && mod(s["time_integration"]["max_iter_implicit"], 1) == 0 "time_integration.max_iter_implicit must be a positive integer"
+            @assert haskey(s["time_integration"], "relax_factor") "Missing field: time_integration.relax_factor for Implicit_Euler (Relaxation)"
+            @assert isa(s["time_integration"]["relax_factor"], Number) && s["time_integration"]["relax_factor"] > 0 && s["time_integration"]["relax_factor"] <= 1 "time_integration.relax_factor must be between 0 and 1"
+        else
+            # Newton / pseudo-transient continuation: validate optional ramp parameters if present
+            for key in ("CFL_max", "CFL_ramp_exponent", "CFL_growth", "newton_min_rho_fraction")
+                if haskey(s["time_integration"], key)
+                    @assert isa(s["time_integration"][key], Number) "time_integration.$key must be numeric"
+                end
+            end
+            if haskey(s["time_integration"], "jacobian_refresh")
+                @assert isa(s["time_integration"]["jacobian_refresh"], Number) && s["time_integration"]["jacobian_refresh"] >= 1 && mod(s["time_integration"]["jacobian_refresh"], 1) == 0 "time_integration.jacobian_refresh must be a positive integer"
+            end
+        end
     end
     @assert haskey(s["time_integration"], "CFL") "Missing field: time_integration.CFL"
     @assert isa(s["time_integration"]["CFL"], Number) && s["time_integration"]["CFL"] > 0 "time_integration.CFL must be positive numeric"
@@ -255,9 +273,20 @@ function VERIFY_INPUT_DATA(s::Dict{String,Any})
         s["time_integration"][key] = Float64(s["time_integration"][key])
     end
     if s["time_integration"]["time_integrator"] == "Implicit_Euler"
-        s["time_integration"]["max_iter_implicit"] = Int(s["time_integration"]["max_iter_implicit"])
-        s["time_integration"]["tolerance"]         = Float64(s["time_integration"]["tolerance"])
-        s["time_integration"]["relax_factor"]      = Float64(s["time_integration"]["relax_factor"])
+        if get(s["time_integration"], "implicit_solver", "Newton") == "Relaxation"
+            s["time_integration"]["max_iter_implicit"] = Int(s["time_integration"]["max_iter_implicit"])
+            s["time_integration"]["tolerance"]         = Float64(s["time_integration"]["tolerance"])
+            s["time_integration"]["relax_factor"]      = Float64(s["time_integration"]["relax_factor"])
+        else
+            for key in ("CFL_max", "CFL_ramp_exponent", "CFL_growth", "newton_min_rho_fraction")
+                if haskey(s["time_integration"], key)
+                    s["time_integration"][key] = Float64(s["time_integration"][key])
+                end
+            end
+            if haskey(s["time_integration"], "jacobian_refresh")
+                s["time_integration"]["jacobian_refresh"] = Int(s["time_integration"]["jacobian_refresh"])
+            end
+        end
     end
 
     # 9. Numerical Dissipation
