@@ -1,0 +1,26 @@
+name: Push to lab mirror
+
+on:
+  push:
+    branches: ['**']
+    tags: ['**']
+  delete:
+  workflow_dispatch:
+
+concurrency:
+  group: mirror
+  cancel-in-progress: false
+
+jobs:
+  mirror:
+    if: github.repository == 'AdrianAA00/HYMOR'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mirror to ALD-Lab
+        run: |
+          git clone --mirror https://github.com/AdrianAA00/HYMOR.git repo
+          cd repo
+          git for-each-ref --format='delete %(refname)' refs/pull | git update-ref --stdin
+          git push --mirror https://x-access-token:${MIRROR_TOKEN}@github.com/ALD-Lab/HYMOR.git
+        env:
+          MIRROR_TOKEN: ${{ secrets.MIRROR_TOKEN }}
