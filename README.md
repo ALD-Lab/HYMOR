@@ -1,5 +1,13 @@
 # HYMOR: HYpersonic MOdal/non-modal, and Receptivity
 
+[![DOI](https://img.shields.io/badge/DOI-10.1016%2Fj.cpc.2026.110340-blue)](https://doi.org/10.1016/j.cpc.2026.110340)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+
+> **Canonical repository.** A read-only mirror is maintained at
+> [ALD-Lab/HYMOR](https://github.com/ALD-Lab/HYMOR); please open issues and pull
+> requests here. If you use HYMOR, please cite
+> [10.1016/j.cpc.2026.110340](https://doi.org/10.1016/j.cpc.2026.110340).
+
 An open-source MATLAB/Julia framework for global modal, non-modal, and receptivity analysis of high-enthalpy hypersonic flows.
 
 ## Overview
@@ -219,8 +227,14 @@ All simulation parameters are defined in the input file (`input_file.m` for MATL
 
 ## References
 
-A. Anton-Alvarez and A. Lozano-Duran, "HYMOR: An open-source package for modal, non-modal,
-  and receptivity analysis in high-enthalpy hypersonic vehicles."
+If you use HYMOR in your work, please cite:
+
+> A. Antón Álvarez and A. Lozano-Durán, "HYMOR: An open-source package for modal,
+> non-modal, and receptivity analysis in high-enthalpy hypersonic vehicles,"
+> *Computer Physics Communications*, 2026.
+> doi: [10.1016/j.cpc.2026.110340](https://doi.org/10.1016/j.cpc.2026.110340)
+
+A BibTeX entry is available via the "Cite this repository" button in the sidebar.
 
 ## License
 
