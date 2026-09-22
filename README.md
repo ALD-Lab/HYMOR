@@ -3,9 +3,9 @@
 [![DOI](https://img.shields.io/badge/DOI-10.1016%2Fj.cpc.2026.110340-blue)](https://doi.org/10.1016/j.cpc.2026.110340)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
-> **Canonical repository.** A read-only mirror is maintained at
-> [ALD-Lab/HYMOR](https://github.com/ALD-Lab/HYMOR); please open issues and pull
-> requests here. If you use HYMOR, please cite
+> A read-only mirror is maintained at [ALD-Lab/HYMOR](https://github.com/ALD-Lab/HYMOR).
+> Please open issues and pull requests on
+> [AdrianAA00/HYMOR](https://github.com/AdrianAA00/HYMOR). If you use HYMOR, please cite
 > [10.1016/j.cpc.2026.110340](https://doi.org/10.1016/j.cpc.2026.110340).
 
 An open-source MATLAB/Julia framework for global modal, non-modal, and receptivity analysis of high-enthalpy hypersonic flows.
